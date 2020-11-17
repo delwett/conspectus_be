@@ -1,2 +1,5 @@
 # Installed packages
 node_modules
+
+#Compiled files
+dist

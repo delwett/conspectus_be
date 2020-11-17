@@ -5,7 +5,7 @@
 ## Usage
 
 * Framework: Express.js v4.17.1
-* Lang: Typescript
+* Lang: Typescript v4.0.5
 * DB: Postgres
 * ORM: TypeORM
 * API: GraphQL

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["src/*"],
+      "*": ["node_modules/*"]
+    },
+    "typeRoots": ["node_modules/@types", "types"]
+  },
+  "include": ["src/**/*"]
+}
+
+  
