@@ -9,3 +9,7 @@
 * DB: Postgres
 * ORM: TypeORM
 * API: GraphQL
+
+## Development
+
+- environment: `yarn` >= 1.22.5

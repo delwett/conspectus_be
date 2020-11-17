@@ -1,0 +1,8 @@
+{
+  "name": "conspectus_be",
+  "repository": "https://github.com/delwett/conspectus_be",
+  "author": "Dmitriy Trunin <dmitriy.trunin@kodep.ru>",
+  "engines": {
+    "yarn": "*"
+  }
+}
