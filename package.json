@@ -2,7 +2,15 @@
   "name": "conspectus_be",
   "repository": "https://github.com/delwett/conspectus_be",
   "author": "Dmitriy Trunin <dmitriy.trunin@kodep.ru>",
+  "private": true,
+  "scripts": {
+    "start": "node ./src/server"
+  },
   "engines": {
+    "node": "14.x",
     "yarn": "*"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
