@@ -7,9 +7,9 @@ export default {
   database: process.env.DB_NAME,
   synchronize: false,
   logging: false,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
+  entities: ["src/entities/**/*.ts"],
+  migrations: ["src/migrations/**/*.ts"],
   cli: {
-    migrationsDir: "src/migration"
+    migrationsDir: "src/migrations"
   }
 };
