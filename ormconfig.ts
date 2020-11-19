@@ -6,7 +6,8 @@ export default {
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   synchronize: false,
-  logging: false,
+  logging: true,
+  logger: "advanced-console",
   entities: ["src/entities/**/*.ts"],
   migrations: ["src/migrations/**/*.ts"],
   cli: {
