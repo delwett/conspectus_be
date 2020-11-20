@@ -1,1 +1,1 @@
-export const stage = process.env.STAGE ?? 'development';
+export const stage = process.env.STAGE ?? 'development'

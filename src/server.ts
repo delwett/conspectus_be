@@ -1,31 +1,31 @@
-import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
+import express from 'express'
+import { graphqlHTTP } from 'express-graphql'
 // Required for TypeORM
-import 'reflect-metadata';
-import { createConnection } from 'typeorm';
-import dotenv from 'dotenv';
-import schema from './api/schema';
-import { stage } from './config';
+import 'reflect-metadata'
+import { createConnection } from 'typeorm'
+import dotenv from 'dotenv'
+import schema from '@/api/schema'
+import { stage } from '@/config'
 
-dotenv.config();
+dotenv.config()
 
-const IS_DEVELOPMENT = stage !== 'production';
-const PORT = process.env.PORT ?? 8000;
+const IsDevelopment = stage !== 'production'
+const Port = process.env.PORT ?? 8000
 
 createConnection()
   .then(async () => {
-    const app = express();
+    const app = express()
 
     app.use(
       '/graphql',
       graphqlHTTP({
         schema: schema,
-        graphiql: IS_DEVELOPMENT
+        graphiql: IsDevelopment
       })
-    );
+    )
 
-    app.listen(PORT, () => {
-      console.log(`GraphQL server started at http://localhost:${PORT}/graphgql`);
-    });
+    app.listen(Port, () => {
+      console.log(`GraphQL server started at http://localhost:${Port}/graphgql`)
+    })
   })
-  .catch(error => console.log('TypeORM connection error: ', error));
+  .catch(error => console.log('TypeORM connection error: ', error))

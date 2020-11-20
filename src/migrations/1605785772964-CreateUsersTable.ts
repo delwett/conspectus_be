@@ -1,7 +1,7 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import bcrypt from 'bcrypt';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
+import bcrypt from 'bcrypt'
 
-const DefaultPassword = '123123123';
+const DefaultPassword = '123123123'
 
 export class CreateUsersTable1605785772964 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -45,16 +45,16 @@ export class CreateUsersTable1605785772964 implements MigrationInterface {
           }
         ]
       })
-    );
+    )
 
-    const generatedPasswordHash = await bcrypt.hash(DefaultPassword, 10);
+    const generatedPasswordHash = await bcrypt.hash(DefaultPassword, 10)
 
     await queryRunner.query(
       `INSERT INTO users (first_name, email, password) VALUES ('Test user', 'test@test.test', '${generatedPasswordHash}')`
-    );
+    )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('users');
+    await queryRunner.dropTable('users')
   }
 }
