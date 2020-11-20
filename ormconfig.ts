@@ -1,5 +1,5 @@
 export default {
-  type: "postgres",
+  type: 'postgres',
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   username: process.env.DB_USER,
@@ -7,10 +7,10 @@ export default {
   database: process.env.DB_NAME,
   synchronize: false,
   logging: true,
-  logger: "advanced-console",
-  entities: ["src/entities/**/*.ts"],
-  migrations: ["src/migrations/**/*.ts"],
+  logger: 'advanced-console',
+  entities: ['src/entities/**/*.ts'],
+  migrations: ['src/migrations/**/*.ts'],
   cli: {
-    migrationsDir: "src/migrations"
+    migrationsDir: 'src/migrations'
   }
 };

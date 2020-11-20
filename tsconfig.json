@@ -11,8 +11,7 @@
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {
-      "@/*": ["src/*"],
-      "*": ["node_modules/*"]
+      "@*": ["src/*"]
     },
     "typeRoots": ["node_modules/@types", "types"]
   },
