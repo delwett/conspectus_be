@@ -14,6 +14,9 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email!: string;
 
+  @Column()
+  password!: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
