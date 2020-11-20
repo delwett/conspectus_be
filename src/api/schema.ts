@@ -1,6 +1,8 @@
 import { GraphQLSchema } from 'graphql'
-import QueryObject from './queries'
+import QueryRootObject from './queries'
+import MutationRootObject from './mutations'
 
 export default new GraphQLSchema({
-  query: QueryObject
+  query: QueryRootObject,
+  mutation: MutationRootObject
 })

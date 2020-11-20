@@ -3,7 +3,7 @@ import usersList from './usersList'
 
 export default new GraphQLObjectType({
   name: 'Query',
-  fields: () => ({
+  fields: {
     usersList
-  })
+  }
 })
