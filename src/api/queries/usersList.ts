@@ -13,7 +13,8 @@ const UserType = new GraphQLObjectType({
 
 const usersList: GraphQLFieldConfig<Source, Context> = {
   type: new GraphQLList(UserType),
-  resolve: async () => {
+  resolve: async (_, __, ctx) => {
+    console.log('!!!!!!!!!!!', ctx)
     const entityManager = getManager()
     return (await entityManager.find(User, { where: { id: '1' } })) ?? []
   }

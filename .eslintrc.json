@@ -24,7 +24,8 @@
       "files": ["*.ts"],
       "rules": {
         "@typescript-eslint/strict-boolean-expressions": 0, 
-        "@typescript-eslint/consistent-type-definitions": 0
+        "@typescript-eslint/consistent-type-definitions": 0,
+        "@typescript-eslint/return-await": 0
       }
     }
   ]
