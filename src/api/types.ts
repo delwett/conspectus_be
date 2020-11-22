@@ -1,7 +1,7 @@
+import { User } from '@/entities/user'
+
 export type Source = undefined
 
 export type Context = {
-  currentUser?: {
-    id: string
-  }
+  currentUser?: User
 }

@@ -1,5 +1,8 @@
 import { GraphQLFieldConfig, GraphQLList, GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql'
 import { getManager } from 'typeorm'
+import handleErrors from '@/api/utils/handle-errors'
+import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
+import NotAuthorizedError from '@/errors/not-authorized-error'
 import { User } from '@/entities/user'
 import type { Source, Context } from '../types'
 
@@ -11,12 +14,24 @@ const UserType = new GraphQLObjectType({
   }
 })
 
+const CollectionType = new GraphQLObjectWithErrorType({
+  name: 'UsersCollection',
+  fields: {
+    collection: { type: new GraphQLList(UserType) }
+  }
+})
+
 const usersList: GraphQLFieldConfig<Source, Context> = {
-  type: new GraphQLList(UserType),
-  resolve: async (_, __, ctx) => {
-    console.log('!!!!!!!!!!!', ctx)
-    const entityManager = getManager()
-    return (await entityManager.find(User, { where: { id: '1' } })) ?? []
+  type: CollectionType,
+  resolve: async (_, __, context) => {
+    return handleErrors(async () => {
+      if (!context.currentUser) throw new NotAuthorizedError()
+
+      const entityManager = getManager()
+      const collection = await entityManager.find(User)
+
+      return { collection }
+    })
   }
 }
 

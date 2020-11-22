@@ -7,6 +7,7 @@ import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import schema from '@/api/schema'
 import AuthService from '@/services/auth'
+import UsersService from '@/services/users'
 import { Stage } from '@/config'
 
 const IsDevelopment = Stage !== 'production'
@@ -20,13 +21,13 @@ createConnection()
 
     app.use('/graphql', async (req, res) => {
       const authToken = typeof req.headers.auth === 'string' ? req.headers.auth : ''
-      const parsedToken = AuthService.parseToken(authToken)
+      const parsedToken = AuthService.decodeToken(authToken)
+
+      const currentUser = parsedToken ? await UsersService.getUserById(parsedToken.id) : undefined
 
       return await graphqlHTTP({
         schema,
-        context: {
-          currentUser: parsedToken
-        }
+        context: { currentUser }
       })(req, res)
     })
 

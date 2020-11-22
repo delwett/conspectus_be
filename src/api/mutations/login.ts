@@ -4,15 +4,15 @@ import handleErrors from '@/api/utils/handle-errors'
 import AuthService from '@/services/auth'
 import type { Source, Context } from '../types'
 
-const LoginPayload = new GraphQLObjectWithErrorType<Source, Context>({
-  name: 'loginPayload',
+const LoginPayload = new GraphQLObjectWithErrorType({
+  name: 'LoginPayload',
   fields: {
     token: { type: GraphQLString }
   }
 })
 
 const LoginInput = new GraphQLInputObjectType({
-  name: 'loginInput',
+  name: 'LoginInput',
   fields: {
     email: { type: GraphQLNonNull(GraphQLString) },
     password: { type: GraphQLNonNull(GraphQLString) }

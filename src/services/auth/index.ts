@@ -1,7 +1,9 @@
 import login from './login'
-import parseToken from './parse-token'
+import encodeToken from './encode-token'
+import decodeToken from './decode-token'
 
 export default {
   login,
-  parseToken
+  encodeToken,
+  decodeToken
 }

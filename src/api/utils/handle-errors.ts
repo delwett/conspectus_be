@@ -1,4 +1,5 @@
 import NotFoundError from '@/errors/not-found-error'
+import NotAuthorizedError from '@/errors/not-authorized-error'
 
 type ErrorField = {
   error: {
@@ -27,6 +28,12 @@ function parseError(e: unknown): ErrorField['error'] {
   if (e instanceof NotFoundError)
     return {
       code: 404,
+      message: e.message
+    }
+
+  if (e instanceof NotAuthorizedError)
+    return {
+      code: 403,
       message: e.message
     }
 

@@ -1,16 +1,17 @@
 import { GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLObjectTypeConfig, GraphQLString } from 'graphql'
+import type { Source, Context } from '../types'
 
-export default class GraphQLObjectWithErrorType<TSource = any, TContext = any> extends GraphQLObjectType {
-  constructor(config: Readonly<GraphQLObjectTypeConfig<TSource, TContext>>) {
+const ErrorType = new GraphQLObjectType<Source, Context>({
+  name: 'Error',
+  fields: {
+    code: { type: GraphQLNonNull(GraphQLInt) },
+    message: { type: GraphQLNonNull(GraphQLString) }
+  }
+})
+
+export default class GraphQLObjectWithErrorType extends GraphQLObjectType {
+  constructor(config: Readonly<GraphQLObjectTypeConfig<Source, Context>>) {
     const fields = typeof config.fields === 'function' ? config.fields() : config.fields
-
-    const ErrorType = new GraphQLObjectType<TSource, TContext>({
-      name: 'error',
-      fields: {
-        code: { type: GraphQLNonNull(GraphQLInt) },
-        message: { type: GraphQLNonNull(GraphQLString) }
-      }
-    })
 
     const extendedConfig = {
       ...config,
