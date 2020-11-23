@@ -20,14 +20,14 @@ createConnection()
     app.use(jsonBodyParserMiddleware())
 
     app.use('/graphql', async (req, res) => {
-      const authToken = typeof req.headers.auth === 'string' ? req.headers.auth : ''
-      const parsedToken = AuthService.decodeToken(authToken)
+      const authToken = typeof req.headers.auth === 'string' ? req.headers.auth : undefined
+      const parsedToken = authToken ? await AuthService.decodeToken(authToken) : undefined
 
       const currentUser = parsedToken ? await UsersService.getUserById(parsedToken.id) : undefined
 
       return await graphqlHTTP({
         schema,
-        context: { currentUser }
+        context: { currentUser, authToken }
       })(req, res)
     })
 

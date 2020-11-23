@@ -4,4 +4,5 @@ export type Source = undefined
 
 export type Context = {
   currentUser?: User
+  authToken?: string
 }
