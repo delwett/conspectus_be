@@ -1,18 +1,11 @@
-import { GraphQLFieldConfig, GraphQLList, GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql'
+import { GraphQLFieldConfig, GraphQLList } from 'graphql'
 import { getManager } from 'typeorm'
 import handleErrors from '@/api/utils/handle-errors'
 import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
+import UserType from '@/api/definitions/user-type'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import { User } from '@/entities/user'
 import type { Source, Context } from '../types'
-
-const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: {
-    id: { type: GraphQLID },
-    firstName: { type: GraphQLString }
-  }
-})
 
 const CollectionType = new GraphQLObjectWithErrorType({
   name: 'UsersCollection',
