@@ -29,7 +29,7 @@ export class User extends BaseEntity {
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
   firstName!: string
 
-  @Column({ name: 'last_name' })
+  @Column({ name: 'last_name', nullable: true })
   @IsOptional()
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
   lastName?: string
