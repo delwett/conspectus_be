@@ -1,9 +1,11 @@
 import { getManager } from 'typeorm'
 import { EntityColumnNotFound } from 'typeorm/error/EntityColumnNotFound'
 import bcrypt from 'bcrypt'
+import { zadd } from '@/utils/redis'
 import { User } from '@/entities/user'
 import NotFoundError from '@/errors/not-found-error'
 import encodeToken from './encode-token'
+import { TokenWhitelistPath, TokenLifetime } from './constants'
 
 type LoginParameters = {
   email: string
@@ -24,7 +26,12 @@ export default async function login(parameters: LoginParameters): Promise<string
 
     if (!valid) throw NotFound
 
-    return encodeToken({ id: user.id })
+    const token = encodeToken({ id: user.id })
+    const tokenExpTimestamp = Date.now() + TokenLifetime
+
+    await zadd(`${TokenWhitelistPath}:${user.id}`, tokenExpTimestamp, token)
+
+    return token
   } catch (e: unknown) {
     if (e instanceof EntityColumnNotFound) throw new NotFoundError('Incorrect email or password')
 

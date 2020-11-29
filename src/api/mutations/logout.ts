@@ -11,12 +11,13 @@ const LogoutPayload = new GraphQLObjectWithErrorType({
 const logout: GraphQLFieldConfig<Source, Context> = {
   type: LogoutPayload,
   resolve: async (_, __, context) => {
+    const currentUserId = context.currentUser?.id
     const authToken = context.authToken
 
     return handleErrors(async () => {
-      if (!authToken) return
+      if (!authToken || !currentUserId) return
 
-      await AuthService.logout(authToken)
+      await AuthService.logout({ id: currentUserId, token: authToken })
     })
   }
 }

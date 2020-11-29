@@ -1,20 +1,24 @@
 import { verify } from 'jsonwebtoken'
-import { promisify } from 'util'
 import { JwtSecret } from '@/config'
-import redisClient from '@/utils/redis-client'
-import { BlacklistTokenPath } from './constants'
+import { zrangebyscore, zremrangebyscore } from '@/utils/redis'
+import { TokenWhitelistPath } from './constants'
 import type { TokenPayload } from './types'
-
-const get = promisify(redisClient.get).bind(redisClient)
 
 export default async function decodeToken(authToken: string): Promise<TokenPayload | undefined> {
   try {
-    const isTokenBlacklisted = await get(`${BlacklistTokenPath}.${authToken}`)
-    if (isTokenBlacklisted) return
-
     const parsed: any = verify(authToken, JwtSecret)
 
-    return parsed?.id && typeof parsed?.id === 'string' ? parsed : undefined
+    const result: TokenPayload | undefined = parsed?.id && typeof parsed.id === 'string' ? parsed : undefined
+
+    if (!result) return
+
+    // TODO: separate functionality below
+
+    await zremrangebyscore(`${TokenWhitelistPath}:${result.id}`, '-inf', Date.now())
+
+    const tokenWhitelist = await zrangebyscore(`${TokenWhitelistPath}:${result.id}`, '-inf', '+inf')
+
+    if (Array.isArray(tokenWhitelist) && tokenWhitelist.includes(authToken)) return result
   } catch (e: unknown) {
     console.error(e)
     return undefined

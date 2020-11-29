@@ -1,14 +1,19 @@
-import { promisify } from 'util'
-import redisClient from '@/utils/redis-client'
-import { BlacklistTokenPath } from './constants'
+import { zrangebyscore, zrem } from '@/utils/redis'
+import { TokenWhitelistPath } from './constants'
 
-const setex = promisify(redisClient.setex).bind(redisClient)
+type LogoutParams = {
+  id: string
+  token: string
+}
 
-const SecondsInDay = 60 * 60 * 24
+export default async function logout(params: LogoutParams): Promise<void> {
+  const { id, token } = params
 
-export default async function logout(token: string): Promise<void> {
   try {
-    await setex(`${BlacklistTokenPath}.${token}`, SecondsInDay, token)
+    const tokenWhitelist = await zrangebyscore(`${TokenWhitelistPath}:${id}`, '-inf', '+inf')
+    if (Array.isArray(tokenWhitelist) && tokenWhitelist.includes(token)) {
+      await zrem(`${TokenWhitelistPath}:${id}`, token)
+    }
   } catch (e: unknown) {
     console.error(e)
     throw e
