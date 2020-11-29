@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail } from 'class-validator'
 
 type ConstructorParams = {
@@ -21,8 +21,8 @@ export class User extends BaseEntity {
     if (password) this.password = password
   }
 
-  @PrimaryGeneratedColumn()
-  id!: number
+  @PrimaryColumn({ type: 'varchar', default: () => 'uuid_generate_v4()' })
+  id!: string
 
   @Column({ name: 'first_name' })
   @IsDefined({ message: 'First name should be defined' })

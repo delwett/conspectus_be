@@ -1,31 +1,33 @@
-import bcrypt from 'bcrypt'
 import { getManager } from 'typeorm'
 import { validate } from 'class-validator'
 import getValidationErrorMessage from '@/utils/get-validation-error-message'
 import ValidationError from '@/errors/validation-error'
 import { User } from '@/entities/user'
+import getUserById from './get-user-by-id'
 
 type CreateUserParams = {
+  id: string
   firstName: string
   lastName?: string
   email: string
-  password: string
 }
 
 export default async function createUser(params: CreateUserParams): Promise<User | undefined> {
-  const { firstName, lastName, email, password } = params
+  const { id, firstName, lastName, email } = params
 
-  if (password.length < 6) throw new ValidationError(`Incorrect password length. Min 6 symbols`)
+  const user = await getUserById(id)
 
-  const paswordHash = await bcrypt.hash(password, 10)
+  if (!user) return
 
-  const user = new User({ firstName, lastName, email, password: paswordHash })
+  user.firstName = firstName
+  user.lastName = lastName
+  user.email = email
 
   const errors = await validate(user)
 
   if (errors.length > 0) throw new ValidationError(getValidationErrorMessage(errors))
 
-  const savedUser = await getManager().save(user)
+  const updatedUser = await getManager().save(user)
 
-  return savedUser
+  return updatedUser
 }

@@ -9,13 +9,12 @@ const get = promisify(redisClient.get).bind(redisClient)
 
 export default async function decodeToken(authToken: string): Promise<TokenPayload | undefined> {
   try {
-    const isTokenBlacklisted = await Boolean(get(`${BlacklistTokenPath}.${authToken}`))
-
+    const isTokenBlacklisted = await get(`${BlacklistTokenPath}.${authToken}`)
     if (isTokenBlacklisted) return
 
     const parsed: any = verify(authToken, JwtSecret)
 
-    return parsed?.id && typeof parsed?.id === 'number' ? parsed : undefined
+    return parsed?.id && typeof parsed?.id === 'string' ? parsed : undefined
   } catch (e: unknown) {
     console.error(e)
     return undefined
