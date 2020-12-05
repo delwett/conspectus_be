@@ -9,10 +9,9 @@
     "lint": "eslint --color --ext .js,.ts .",
     "build": "rm -rf ./dist && tsc --project .",
     "test": "yarn typecheck && yarn lint",
-    "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create -n",
-    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
-    "migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert"
+    "migration:create": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js migration:create -n",
+    "migrate": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js migration:run",
+    "migration:revert": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js migration:revert"
   },
   "engines": {
     "node": "14.x",
@@ -22,6 +21,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "class-validator": "^0.12.2",
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",

@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail } from 'class-validator'
+import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail, IsDate } from 'class-validator'
 
 type ConstructorParams = {
   firstName?: string
@@ -21,7 +21,7 @@ export class User extends BaseEntity {
     if (password) this.password = password
   }
 
-  @PrimaryColumn({ type: 'varchar', default: () => 'uuid_generate_v4()' })
+  @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   id!: string
 
   @Column({ name: 'first_name' })
@@ -45,8 +45,10 @@ export class User extends BaseEntity {
   password!: string
 
   @CreateDateColumn({ name: 'created_at' })
+  @IsDate()
   createdAt!: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
+  @IsDate()
   updatedAt!: Date
 }

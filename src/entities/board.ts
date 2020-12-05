@@ -1,0 +1,30 @@
+import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { IsDate, IsEnum, IsNotEmpty } from 'class-validator'
+
+export enum BoardStatus {
+  Pending = 'PENDING',
+  Finished = 'FINISHED'
+}
+
+@Entity({ name: 'boards' })
+export class Board extends BaseEntity {
+  @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
+  id!: string
+
+  @Column({ name: 'meeting_date', type: 'date' })
+  @IsNotEmpty({ message: 'Meeting date should be defined' })
+  meetingDate!: string
+
+  @Column({ type: 'varchar' })
+  @IsNotEmpty({ message: 'Status should be defined' })
+  @IsEnum(BoardStatus, { message: 'Incorect status value' })
+  status!: BoardStatus
+
+  @CreateDateColumn({ name: 'created_at' })
+  @IsDate()
+  createdAt!: Date
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  @IsDate()
+  updatedAt!: Date
+}
