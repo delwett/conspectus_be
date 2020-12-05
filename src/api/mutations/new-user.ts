@@ -2,6 +2,7 @@ import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLStri
 import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
 import UserType from '@/api/definitions/user-type'
 import handleErrors from '@/api/utils/handle-errors'
+import NotAuthorizedError from '@/errors/not-authorized-error'
 import UserService from '@/services/users'
 import type { Source, Context } from '../types'
 
@@ -36,7 +37,9 @@ const newUser: GraphQLFieldConfig<Source, Context> = {
   args: {
     newUserInput: { type: NewUserInput }
   },
-  resolve: async (_, args) => {
+  resolve: async (_, args, context) => {
+    if (!context.currentUser) throw new NotAuthorizedError()
+
     const { firstName, lastName, email, password } = (args as InputType).newUserInput
     return handleErrors(async () => {
       const user = await UserService.createUser({ firstName, lastName, email, password })
