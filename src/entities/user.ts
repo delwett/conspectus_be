@@ -1,5 +1,6 @@
-import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
 import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail, IsDate } from 'class-validator'
+import { Task } from '@/entities/task'
 
 type ConstructorParams = {
   firstName?: string
@@ -24,12 +25,12 @@ export class User extends BaseEntity {
   @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   id!: string
 
-  @Column({ name: 'first_name' })
+  @Column()
   @IsDefined({ message: 'First name should be defined' })
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
   firstName!: string
 
-  @Column({ name: 'last_name', nullable: true })
+  @Column({ nullable: true })
   @IsOptional()
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
   lastName?: string
@@ -44,11 +45,14 @@ export class User extends BaseEntity {
   @IsNotEmpty({ message: 'Password should be defined' })
   password!: string
 
-  @CreateDateColumn({ name: 'created_at' })
+  @OneToMany(() => Task, task => task.board)
+  tasks?: Task[]
+
+  @CreateDateColumn()
   @IsDate()
   createdAt!: Date
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   @IsDate()
   updatedAt!: Date
 }

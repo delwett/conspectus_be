@@ -44,6 +44,7 @@ function parseError(e: unknown): ErrorField['error'] {
       message: e.message
     }
 
+  console.error(e)
   return {
     code: 500,
     message: 'Server error!'

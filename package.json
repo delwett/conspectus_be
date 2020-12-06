@@ -31,7 +31,8 @@
     "pg": "^8.5.1",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.29"
+    "typeorm": "^0.2.29",
+    "typeorm-naming-strategies": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

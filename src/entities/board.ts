@@ -1,5 +1,6 @@
-import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
 import { IsDate, IsEnum, IsNotEmpty } from 'class-validator'
+import { Task } from '@/entities/task'
 
 export enum BoardStatus {
   Pending = 'PENDING',
@@ -11,7 +12,7 @@ export class Board extends BaseEntity {
   @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   id!: string
 
-  @Column({ name: 'meeting_date', type: 'date' })
+  @Column({ type: 'date' })
   @IsNotEmpty({ message: 'Meeting date should be defined' })
   meetingDate!: string
 
@@ -20,11 +21,14 @@ export class Board extends BaseEntity {
   @IsEnum(BoardStatus, { message: 'Incorect status value' })
   status!: BoardStatus
 
-  @CreateDateColumn({ name: 'created_at' })
+  @OneToMany(() => Task, task => task.board)
+  tasks?: Promise<Task[]>
+
+  @CreateDateColumn()
   @IsDate()
   createdAt!: Date
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   @IsDate()
   updatedAt!: Date
 }

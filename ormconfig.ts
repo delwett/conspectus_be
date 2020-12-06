@@ -1,3 +1,5 @@
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+
 export default {
   type: 'postgres',
   host: process.env.DB_HOST,
@@ -7,6 +9,7 @@ export default {
   database: process.env.DB_NAME,
   synchronize: false,
   logging: true,
+  namingStrategy: new SnakeNamingStrategy(),
   logger: 'advanced-console',
   entities: ['src/entities/**/*.ts'],
   migrations: ['src/migrations/**/*.ts'],
