@@ -5,6 +5,7 @@ import logout from './logout'
 import newUser from './new-user'
 import updateUser from './update-user'
 import changePassword from './change-password'
+import addTask from './add-task'
 
 export default new GraphQLObjectType<Source, Context>({
   name: 'Mutation',
@@ -13,6 +14,7 @@ export default new GraphQLObjectType<Source, Context>({
     logout,
     newUser,
     updateUser,
-    changePassword
+    changePassword,
+    addTask
   }
 })

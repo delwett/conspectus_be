@@ -1,5 +1,14 @@
-import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { IsDate, IsDefined, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
+import {
+  Entity,
+  BaseEntity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany
+} from 'typeorm'
+import { IsDefined, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
 import { Board } from '@/entities/board'
 import { User } from '@/entities/user'
 
@@ -8,8 +17,28 @@ export enum TaskStatus {
   Completed = 'COMPLETED'
 }
 
+type ConstructorParams = {
+  boardId?: string
+  creatorId?: string
+  parentId?: string
+  description?: string
+  status?: TaskStatus
+}
+
 @Entity({ name: 'tasks' })
 export class Task extends BaseEntity {
+  constructor(params?: ConstructorParams) {
+    super()
+    if (!params) return
+    const { boardId, creatorId, parentId, description, status } = params
+
+    if (boardId) this.boardId = boardId
+    if (creatorId) this.creatorId = creatorId
+    if (parentId) this.parentId = parentId
+    if (description) this.description = description
+    if (status) this.status = status
+  }
+
   @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   id!: string
 
@@ -17,15 +46,24 @@ export class Task extends BaseEntity {
   @IsNotEmpty({ message: 'Board for task should be defined' })
   boardId!: string
 
-  @ManyToOne(() => Board, board => board.tasks)
+  @ManyToOne(() => Board, board => board.tasks, { onDelete: 'CASCADE' })
   board!: Board
 
   @Column({ type: 'uuid' })
   @IsNotEmpty({ message: 'Creator for task should be defined' })
   creatorId!: string
 
-  @ManyToOne(() => User, user => user.tasks)
+  @ManyToOne(() => User, user => user.tasks, { onDelete: 'CASCADE' })
   creator!: User
+
+  @Column({ type: 'uuid', nullable: true })
+  parentId?: string
+
+  @OneToMany(() => Task, task => task.parent)
+  subtasks?: Promise<Task[]>
+
+  @ManyToOne(() => Task, task => task.subtasks)
+  parent?: Task
 
   @Column()
   @IsDefined({ message: 'Description should be defined' })
@@ -38,10 +76,8 @@ export class Task extends BaseEntity {
   status!: TaskStatus
 
   @CreateDateColumn()
-  @IsDate()
-  createdAt!: Date
+  readonly createdAt!: Date
 
   @UpdateDateColumn()
-  @IsDate()
-  updatedAt!: Date
+  readonly updatedAt!: Date
 }

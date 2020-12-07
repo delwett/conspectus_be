@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
-import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail, IsDate } from 'class-validator'
+import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail } from 'class-validator'
 import { Task } from '@/entities/task'
 
 type ConstructorParams = {
@@ -45,14 +45,12 @@ export class User extends BaseEntity {
   @IsNotEmpty({ message: 'Password should be defined' })
   password!: string
 
-  @OneToMany(() => Task, task => task.board)
+  @OneToMany(() => Task, task => task.creator)
   tasks?: Task[]
 
   @CreateDateColumn()
-  @IsDate()
-  createdAt!: Date
+  readonly createdAt!: Date
 
   @UpdateDateColumn()
-  @IsDate()
-  updatedAt!: Date
+  readonly updatedAt!: Date
 }

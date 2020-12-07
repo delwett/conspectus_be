@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql'
 
-export default new GraphQLObjectType({
+const UserType = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: { type: GraphQLNonNull(GraphQLID) },
@@ -9,3 +9,5 @@ export default new GraphQLObjectType({
     email: { type: GraphQLNonNull(GraphQLString) }
   }
 })
+
+export default UserType

@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
-import { IsDate, IsEnum, IsNotEmpty } from 'class-validator'
+import { IsEnum, IsNotEmpty } from 'class-validator'
 import { Task } from '@/entities/task'
 
 export enum BoardStatus {
@@ -25,10 +25,8 @@ export class Board extends BaseEntity {
   tasks?: Promise<Task[]>
 
   @CreateDateColumn()
-  @IsDate()
-  createdAt!: Date
+  readonly createdAt!: Date
 
   @UpdateDateColumn()
-  @IsDate()
-  updatedAt!: Date
+  readonly updatedAt!: Date
 }

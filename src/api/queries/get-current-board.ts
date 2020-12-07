@@ -1,17 +1,10 @@
 import { GraphQLFieldConfig, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql'
 import handleErrors from '@/api/utils/handle-errors'
 import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
+import TaskType from '@/api/definitions/task-type'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import BoardsService from '@/services/boards'
 import type { Source, Context } from '../types'
-
-const TaskType = new GraphQLObjectType({
-  name: 'Task',
-  fields: {
-    id: { type: GraphQLNonNull(GraphQLID) },
-    description: { type: GraphQLNonNull(GraphQLString) }
-  }
-})
 
 const BoardType = new GraphQLObjectType({
   name: 'Board',
