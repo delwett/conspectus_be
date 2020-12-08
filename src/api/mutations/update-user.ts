@@ -1,10 +1,9 @@
 import { GraphQLFieldConfig, GraphQLID, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
-import UserType from '@/api/definitions/user-type'
+import { GraphQLObjectWithErrorType, UserType } from '@/api/definitions'
 import handleErrors from '@/api/utils/handle-errors'
+import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import UserService from '@/services/users'
-import type { Source, Context } from '../types'
 
 type InputType = {
   updateUserInput: {
@@ -32,7 +31,7 @@ const UpdateUserInput = new GraphQLInputObjectType({
   }
 })
 
-const newUser: GraphQLFieldConfig<Source, Context> = {
+const newUser: GraphQLFieldConfig<undefined, Context> = {
   type: UpdateUserPayload,
   args: {
     updateUserInput: { type: UpdateUserInput }

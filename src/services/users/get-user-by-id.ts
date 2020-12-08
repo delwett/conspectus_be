@@ -5,9 +5,7 @@ import { User } from '@/entities/user'
 
 export default async function getUserById(id: string): Promise<User | undefined> {
   try {
-    const entityManager = getManager()
-
-    const user = await entityManager.findOne(User, { where: { id } })
+    const user = await getManager().findOne(User, { where: { id } })
 
     if (!user) throw new NotFoundError('User is not found')
 

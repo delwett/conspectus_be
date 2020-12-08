@@ -1,9 +1,9 @@
 import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
+import { GraphQLObjectWithErrorType } from '@/api/definitions'
 import handleErrors from '@/api/utils/handle-errors'
+import type { Context } from '@/api/types'
 import UserService from '@/services/users'
 import AuthService from '@/services/auth'
-import type { Source, Context } from '../types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 
 type InputType = {
@@ -28,7 +28,7 @@ const ChangePasswordInput = new GraphQLInputObjectType({
   }
 })
 
-const changePassword: GraphQLFieldConfig<Source, Context> = {
+const changePassword: GraphQLFieldConfig<undefined, Context> = {
   type: ChangePasswordPayload,
   args: {
     changePasswordInput: { type: ChangePasswordInput }

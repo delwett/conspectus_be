@@ -1,8 +1,8 @@
 import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
+import { GraphQLObjectWithErrorType } from '@/api/definitions'
+import type { Context } from '@/api/types'
 import handleErrors from '@/api/utils/handle-errors'
 import AuthService from '@/services/auth'
-import type { Source, Context } from '../types'
 
 const LoginPayload = new GraphQLObjectWithErrorType({
   name: 'LoginPayload',
@@ -19,7 +19,7 @@ const LoginInput = new GraphQLInputObjectType({
   }
 })
 
-const login: GraphQLFieldConfig<Source, Context> = {
+const login: GraphQLFieldConfig<undefined, Context> = {
   type: LoginPayload,
   args: {
     credentials: { type: LoginInput }

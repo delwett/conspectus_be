@@ -60,7 +60,7 @@ export class Task extends BaseEntity {
   parentId?: string
 
   @OneToMany(() => Task, task => task.parent)
-  subtasks?: Promise<Task[]>
+  subtasks?: Task[]
 
   @ManyToOne(() => Task, task => task.subtasks)
   parent?: Task

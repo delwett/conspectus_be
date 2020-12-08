@@ -5,9 +5,7 @@ import { Task } from '@/entities/task'
 
 export default async function getTaskById(id: string): Promise<Task> {
   try {
-    const entityManager = getManager()
-
-    const task = await entityManager.findOne(Task, { where: { id } })
+    const task = await getManager().findOne(Task, { where: { id } })
 
     if (!task) throw new NotFoundError('Task is not found')
 

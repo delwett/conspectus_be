@@ -1,11 +1,10 @@
 import { GraphQLFieldConfig, GraphQLList } from 'graphql'
 import { getManager } from 'typeorm'
 import handleErrors from '@/api/utils/handle-errors'
-import GraphQLObjectWithErrorType from '@/api/definitions/graphql-object-with-error-type'
-import UserType from '@/api/definitions/user-type'
+import { GraphQLObjectWithErrorType, UserType } from '@/api/definitions'
+import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import { User } from '@/entities/user'
-import type { Source, Context } from '../types'
 
 const CollectionType = new GraphQLObjectWithErrorType({
   name: 'UsersCollection',
@@ -14,7 +13,7 @@ const CollectionType = new GraphQLObjectWithErrorType({
   }
 })
 
-const usersList: GraphQLFieldConfig<Source, Context> = {
+const usersList: GraphQLFieldConfig<undefined, Context> = {
   type: CollectionType,
   resolve: async (_, __, context) => {
     return handleErrors(async () => {

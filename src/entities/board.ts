@@ -22,7 +22,7 @@ export class Board extends BaseEntity {
   status!: BoardStatus
 
   @OneToMany(() => Task, task => task.board)
-  tasks?: Promise<Task[]>
+  tasks?: Task[]
 
   @CreateDateColumn()
   readonly createdAt!: Date

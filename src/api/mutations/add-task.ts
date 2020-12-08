@@ -1,10 +1,10 @@
-import { GraphQLID, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLFieldConfig, GraphQLID, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
 import { GraphQLObjectWithErrorType, TaskType } from '@/api/definitions'
 import handleErrors from '@/api/utils/handle-errors'
+import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import BoardsService from '@/services/boards'
 import TasksService from '@/services/tasks'
-import type { GraphQLFieldConfig } from '../types'
 
 type InputType = {
   newTaskInput: {
@@ -28,7 +28,7 @@ const NewTaskInput = new GraphQLInputObjectType({
   }
 })
 
-const newTask: GraphQLFieldConfig = {
+const newTask: GraphQLFieldConfig<undefined, Context> = {
   type: NewTaskPayload,
   args: {
     newTaskInput: { type: NewTaskInput }

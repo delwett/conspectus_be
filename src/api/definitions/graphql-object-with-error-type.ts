@@ -7,10 +7,9 @@ import {
   GraphQLString,
   Thunk
 } from 'graphql'
-import type { Source, Context } from '../types'
 
-type ObjectConfig = Omit<GraphQLObjectTypeConfig<Source, Context>, 'fields'> & {
-  fields?: Thunk<GraphQLFieldConfigMap<Source, Context>>
+type ObjectConfig<TSource, TContext> = Omit<GraphQLObjectTypeConfig<TSource, TContext>, 'fields'> & {
+  fields?: Thunk<GraphQLFieldConfigMap<TSource, TContext>>
 }
 
 const ErrorType = new GraphQLObjectType({
@@ -21,8 +20,8 @@ const ErrorType = new GraphQLObjectType({
   }
 })
 
-export default class GraphQLObjectWithErrorType extends GraphQLObjectType {
-  constructor(config: Readonly<ObjectConfig>) {
+export default class GraphQLObjectWithErrorType<TSource = any, TContext = any> extends GraphQLObjectType {
+  constructor(config: Readonly<ObjectConfig<TSource, TContext>>) {
     const fields = typeof config.fields === 'function' ? config.fields() : config.fields
 
     const extendedConfig = {

@@ -6,6 +6,7 @@ import gqlPlayground from 'graphql-playground-middleware-express'
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import schema from '@/api/schema'
+import { Context } from '@/api/types'
 import AuthService from '@/services/auth'
 import UsersService from '@/services/users'
 import { Stage } from '@/config'
@@ -25,10 +26,13 @@ createConnection()
 
       const currentUser = parsedToken ? await UsersService.getUserById(parsedToken.id) : undefined
 
-      return await graphqlHTTP({
-        schema,
-        context: { currentUser, authToken }
-      })(req, res)
+      const context: Context = {
+        currentUser,
+        authToken,
+        dataLoaders: new WeakMap()
+      }
+
+      return await graphqlHTTP({ schema, context })(req, res)
     })
 
     if (IsDevelopment) app.get('/playground', gqlPlayground({ endpoint: '/graphql' }))
