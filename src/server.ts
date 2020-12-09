@@ -1,18 +1,13 @@
 import express from 'express'
-import { json as jsonBodyParserMiddleware } from 'body-parser'
-import { graphqlHTTP } from 'express-graphql'
-import gqlPlayground from 'graphql-playground-middleware-express'
 // Required for TypeORM
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
-import schema from '@/api/schema'
-import { Context } from '@/api/types'
-import AuthService from '@/services/auth'
-import UsersService from '@/services/users'
-import { Stage } from '@/config'
+import { json as jsonBodyParserMiddleware } from 'body-parser'
+import gqlPlayground from 'graphql-playground-middleware-express'
+import graphqlMiddleware from '@/api'
+import { Stage, Port, ApiPath, ApiPlaygroundPath } from '@/config'
 
 const IsDevelopment = Stage !== 'production'
-const Port = process.env.PORT ?? 8000
 
 createConnection()
   .then(async () => {
@@ -20,25 +15,12 @@ createConnection()
 
     app.use(jsonBodyParserMiddleware())
 
-    app.use('/graphql', async (req, res) => {
-      const authToken = typeof req.headers.auth === 'string' ? req.headers.auth : undefined
-      const parsedToken = authToken ? await AuthService.decodeToken(authToken) : undefined
+    app.use(ApiPath, graphqlMiddleware)
 
-      const currentUser = parsedToken ? await UsersService.getUserById(parsedToken.id) : undefined
-
-      const context: Context = {
-        currentUser,
-        authToken,
-        dataLoaders: new WeakMap()
-      }
-
-      return await graphqlHTTP({ schema, context })(req, res)
-    })
-
-    if (IsDevelopment) app.get('/playground', gqlPlayground({ endpoint: '/graphql' }))
+    if (IsDevelopment) app.get(ApiPlaygroundPath, gqlPlayground({ endpoint: ApiPath }))
 
     app.listen(Port)
+
+    console.log(`GraphQL server started at http://localhost:${Port}${ApiPath}`)
   })
   .catch(error => console.error('TypeORM connection error: ', error))
-
-console.log(`GraphQL server started at http://localhost:${Port}/graphgql`)

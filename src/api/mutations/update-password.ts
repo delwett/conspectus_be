@@ -1,10 +1,9 @@
 import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import { GraphQLObjectWithErrorType } from '@/api/definitions'
-import handleErrors from '@/api/utils/handle-errors'
+import { AuthTokenScalar } from '@/api/definitions'
 import type { Context } from '@/api/types'
+import NotAuthorizedError from '@/errors/not-authorized-error'
 import UserService from '@/services/users'
 import AuthService from '@/services/auth'
-import NotAuthorizedError from '@/errors/not-authorized-error'
 
 type InputType = {
   updatePasswordInput: {
@@ -12,13 +11,6 @@ type InputType = {
     newPassword: string
   }
 }
-
-const UpdatePasswordResponseType = new GraphQLObjectWithErrorType({
-  name: 'UpdatePasswordResponseType',
-  fields: {
-    token: { type: GraphQLString }
-  }
-})
 
 const UpdatePasswordInput = new GraphQLInputObjectType({
   name: 'UpdatePasswordInput',
@@ -29,23 +21,20 @@ const UpdatePasswordInput = new GraphQLInputObjectType({
 })
 
 const updatePassword: GraphQLFieldConfig<undefined, Context> = {
-  type: UpdatePasswordResponseType,
+  type: AuthTokenScalar,
   args: {
     updatePasswordInput: { type: UpdatePasswordInput }
   },
   resolve: async (_, args, context) => {
-    return handleErrors(async () => {
-      if (!context.currentUser) throw new NotAuthorizedError()
+    if (!context.currentUser) throw new NotAuthorizedError()
 
-      const { oldPassword, newPassword } = (args as InputType).updatePasswordInput
-      const id = context.currentUser.id
+    const { oldPassword, newPassword } = (args as InputType).updatePasswordInput
+    const id = context.currentUser.id
 
-      await UserService.updatePassword({ id, oldPassword, newPassword })
-      await AuthService.invalidateTokens(id)
-      const token = AuthService.login({ email: context.currentUser.email, password: newPassword })
+    await UserService.updatePassword({ id, oldPassword, newPassword })
+    await AuthService.invalidateTokens(id)
 
-      return { token }
-    })
+    return AuthService.login({ email: context.currentUser.email, password: newPassword })
   }
 }
 

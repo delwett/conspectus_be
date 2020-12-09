@@ -1,6 +1,5 @@
 import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import { GraphQLObjectWithErrorType, UserType } from '@/api/definitions'
-import handleErrors from '@/api/utils/handle-errors'
+import { UserType } from '@/api/definitions'
 import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import UserService from '@/services/users'
@@ -13,13 +12,6 @@ type InputType = {
   }
 }
 
-const UpdateUserResponseType = new GraphQLObjectWithErrorType({
-  name: 'UpdateUserResponseType',
-  fields: {
-    user: { type: UserType }
-  }
-})
-
 const UpdateUserInput = new GraphQLInputObjectType({
   name: 'UpdateUserInput',
   fields: {
@@ -30,20 +22,16 @@ const UpdateUserInput = new GraphQLInputObjectType({
 })
 
 const newUser: GraphQLFieldConfig<undefined, Context> = {
-  type: UpdateUserResponseType,
+  type: UserType,
   args: {
     updateUserInput: { type: UpdateUserInput }
   },
   resolve: async (_, args, context) => {
-    return handleErrors(async () => {
-      if (!context.currentUser) throw new NotAuthorizedError()
+    if (!context.currentUser) throw new NotAuthorizedError()
 
-      const { firstName, lastName, email } = (args as InputType).updateUserInput
+    const { firstName, lastName, email } = (args as InputType).updateUserInput
 
-      const user = await UserService.updateUser({ id: context.currentUser.id, firstName, lastName, email })
-
-      return { user }
-    })
+    return UserService.updateUser({ id: context.currentUser.id, firstName, lastName, email })
   }
 }
 

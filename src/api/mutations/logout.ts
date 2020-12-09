@@ -1,24 +1,18 @@
-import { GraphQLFieldConfig } from 'graphql'
-import { GraphQLObjectWithErrorType } from '@/api/definitions'
-import handleErrors from '@/api/utils/handle-errors'
+import { GraphQLFieldConfig, GraphQLBoolean } from 'graphql'
 import type { Context } from '@/api/types'
 import AuthService from '@/services/auth'
 
-const LogoutResponseType = new GraphQLObjectWithErrorType({
-  name: 'LogoutResponseType'
-})
-
 const logout: GraphQLFieldConfig<undefined, Context> = {
-  type: LogoutResponseType,
+  type: GraphQLBoolean,
   resolve: async (_, __, context) => {
-    return handleErrors(async () => {
-      const { currentUser, authToken } = context
-      const currentUserId = currentUser?.id
+    const { currentUser, authToken } = context
+    const currentUserId = currentUser?.id
 
-      if (!authToken || !currentUserId) return
+    if (!authToken || !currentUserId) return false
 
-      await AuthService.logout({ id: currentUserId, token: authToken })
-    })
+    await AuthService.logout({ id: currentUserId, token: authToken }).catch(() => false)
+
+    return true
   }
 }
 

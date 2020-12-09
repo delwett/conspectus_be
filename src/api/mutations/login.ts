@@ -1,15 +1,14 @@
 import { GraphQLFieldConfig, GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql'
-import { GraphQLObjectWithErrorType } from '@/api/definitions'
+import { AuthTokenScalar } from '@/api/definitions'
 import type { Context } from '@/api/types'
-import handleErrors from '@/api/utils/handle-errors'
 import AuthService from '@/services/auth'
 
-const LoginResponseType = new GraphQLObjectWithErrorType({
-  name: 'LoginResponseType',
-  fields: {
-    token: { type: GraphQLString }
+type InputType = {
+  loginInput: {
+    email: string
+    password: string
   }
-})
+}
 
 const LoginInput = new GraphQLInputObjectType({
   name: 'LoginInput',
@@ -20,17 +19,14 @@ const LoginInput = new GraphQLInputObjectType({
 })
 
 const login: GraphQLFieldConfig<undefined, Context> = {
-  type: LoginResponseType,
+  type: AuthTokenScalar,
   args: {
-    credentials: { type: LoginInput }
+    loginInput: { type: LoginInput }
   },
   resolve: async (_, args) => {
-    const { email, password } = args.credentials
+    const { email, password } = (args as InputType).loginInput
 
-    return handleErrors(async () => {
-      const token = await AuthService.login({ email, password })
-      return { token }
-    })
+    return AuthService.login({ email, password })
   }
 }
 
