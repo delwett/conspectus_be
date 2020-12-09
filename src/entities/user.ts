@@ -1,6 +1,7 @@
 import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
 import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail } from 'class-validator'
 import { Task } from '@/entities/task'
+import { Comment } from '@/entities/comment'
 
 type ConstructorParams = {
   firstName?: string
@@ -47,6 +48,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Task, task => task.creator)
   tasks?: Task[]
+
+  @OneToMany(() => Comment, comment => comment.creator)
+  comments?: Comment[]
 
   @CreateDateColumn()
   readonly createdAt!: Date

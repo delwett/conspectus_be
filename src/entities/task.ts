@@ -11,6 +11,7 @@ import {
 import { IsDefined, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
 import { Board } from '@/entities/board'
 import { User } from '@/entities/user'
+import { Comment } from '@/entities//comment'
 
 export enum TaskStatus {
   InProgress = 'IN_PROGRESS',
@@ -64,6 +65,9 @@ export class Task extends BaseEntity {
 
   @ManyToOne(() => Task, task => task.subtasks)
   parent?: Task
+
+  @OneToMany(() => Comment, comment => comment.task)
+  comments?: Comment[]
 
   @Column()
   @IsDefined({ message: 'Description should be defined' })
