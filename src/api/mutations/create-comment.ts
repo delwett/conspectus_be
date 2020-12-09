@@ -13,8 +13,8 @@ type InputType = {
   }
 }
 
-const CreateCommentPayload = new GraphQLObjectWithErrorType({
-  name: 'CreateCommentPayload',
+const CreateCommentResponseType = new GraphQLObjectWithErrorType({
+  name: 'CreateCommentResponseType',
   fields: {
     comment: { type: CommentType }
   }
@@ -29,7 +29,7 @@ const CreateCommentInput = new GraphQLInputObjectType({
 })
 
 const createComment: GraphQLFieldConfig<undefined, Context> = {
-  type: CreateCommentPayload,
+  type: CreateCommentResponseType,
   args: {
     createCommentInput: { type: CreateCommentInput }
   },

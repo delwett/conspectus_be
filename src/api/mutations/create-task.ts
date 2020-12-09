@@ -7,37 +7,37 @@ import BoardsService from '@/services/boards'
 import TasksService from '@/services/tasks'
 
 type InputType = {
-  newTaskInput: {
+  createTaskInput: {
     parentId?: string
     description: string
   }
 }
 
-const NewTaskPayload = new GraphQLObjectWithErrorType({
-  name: 'NewTaskPayload',
+const CreateTaskResponseType = new GraphQLObjectWithErrorType({
+  name: 'CreateTaskResponseType',
   fields: {
     task: { type: TaskType }
   }
 })
 
-const NewTaskInput = new GraphQLInputObjectType({
-  name: 'NewTaskInput',
+const CreateTaskInput = new GraphQLInputObjectType({
+  name: 'CreateTaskInput',
   fields: {
     parentId: { type: GraphQLID },
     description: { type: GraphQLNonNull(GraphQLString) }
   }
 })
 
-const newTask: GraphQLFieldConfig<undefined, Context> = {
-  type: NewTaskPayload,
+const createTask: GraphQLFieldConfig<undefined, Context> = {
+  type: CreateTaskResponseType,
   args: {
-    newTaskInput: { type: NewTaskInput }
+    createTaskInput: { type: CreateTaskInput }
   },
   resolve: async (_, args, context) => {
     return handleErrors(async () => {
       if (!context.currentUser) throw new NotAuthorizedError()
 
-      const { description, parentId } = (args as InputType).newTaskInput
+      const { description, parentId } = (args as InputType).createTaskInput
 
       const currentBoard = await BoardsService.getCurrentBoard()
 
@@ -53,4 +53,4 @@ const newTask: GraphQLFieldConfig<undefined, Context> = {
   }
 }
 
-export default newTask
+export default createTask

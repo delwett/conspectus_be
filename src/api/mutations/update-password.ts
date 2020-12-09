@@ -7,37 +7,37 @@ import AuthService from '@/services/auth'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 
 type InputType = {
-  changePasswordInput: {
+  updatePasswordInput: {
     oldPassword: string
     newPassword: string
   }
 }
 
-const ChangePasswordPayload = new GraphQLObjectWithErrorType({
-  name: 'ChangePasswordPayload',
+const UpdatePasswordResponseType = new GraphQLObjectWithErrorType({
+  name: 'UpdatePasswordResponseType',
   fields: {
     token: { type: GraphQLString }
   }
 })
 
-const ChangePasswordInput = new GraphQLInputObjectType({
-  name: 'ChangePasswordInput',
+const UpdatePasswordInput = new GraphQLInputObjectType({
+  name: 'UpdatePasswordInput',
   fields: {
     oldPassword: { type: GraphQLNonNull(GraphQLString) },
     newPassword: { type: GraphQLNonNull(GraphQLString) }
   }
 })
 
-const changePassword: GraphQLFieldConfig<undefined, Context> = {
-  type: ChangePasswordPayload,
+const updatePassword: GraphQLFieldConfig<undefined, Context> = {
+  type: UpdatePasswordResponseType,
   args: {
-    changePasswordInput: { type: ChangePasswordInput }
+    updatePasswordInput: { type: UpdatePasswordInput }
   },
   resolve: async (_, args, context) => {
     return handleErrors(async () => {
       if (!context.currentUser) throw new NotAuthorizedError()
 
-      const { oldPassword, newPassword } = (args as InputType).changePasswordInput
+      const { oldPassword, newPassword } = (args as InputType).updatePasswordInput
       const id = context.currentUser.id
 
       await UserService.updatePassword({ id, oldPassword, newPassword })
@@ -49,4 +49,4 @@ const changePassword: GraphQLFieldConfig<undefined, Context> = {
   }
 }
 
-export default changePassword
+export default updatePassword

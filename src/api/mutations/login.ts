@@ -4,8 +4,8 @@ import type { Context } from '@/api/types'
 import handleErrors from '@/api/utils/handle-errors'
 import AuthService from '@/services/auth'
 
-const LoginPayload = new GraphQLObjectWithErrorType({
-  name: 'LoginPayload',
+const LoginResponseType = new GraphQLObjectWithErrorType({
+  name: 'LoginResponseType',
   fields: {
     token: { type: GraphQLString }
   }
@@ -20,7 +20,7 @@ const LoginInput = new GraphQLInputObjectType({
 })
 
 const login: GraphQLFieldConfig<undefined, Context> = {
-  type: LoginPayload,
+  type: LoginResponseType,
   args: {
     credentials: { type: LoginInput }
   },

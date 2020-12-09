@@ -1,10 +1,10 @@
 import { GraphQLObjectType } from 'graphql'
 import login from './login'
 import logout from './logout'
-import newUser from './new-user'
+import createUser from './create-user'
 import updateUser from './update-user'
-import changePassword from './change-password'
-import addTask from './add-task'
+import updatePassword from './update-password'
+import createTask from './create-task'
 import createComment from './create-comment'
 
 export default new GraphQLObjectType({
@@ -12,10 +12,10 @@ export default new GraphQLObjectType({
   fields: {
     login,
     logout,
-    newUser,
+    createUser,
     updateUser,
-    changePassword,
-    addTask,
+    updatePassword,
+    createTask,
     createComment
   }
 })

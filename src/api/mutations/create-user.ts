@@ -6,7 +6,7 @@ import NotAuthorizedError from '@/errors/not-authorized-error'
 import UserService from '@/services/users'
 
 type InputType = {
-  newUserInput: {
+  createUserInput: {
     firstName: string
     lastName?: string
     email: string
@@ -14,15 +14,15 @@ type InputType = {
   }
 }
 
-const NewUserPayload = new GraphQLObjectWithErrorType({
-  name: 'NewUserPayload',
+const CreateUserResponseType = new GraphQLObjectWithErrorType({
+  name: 'CreateUserResponseType',
   fields: {
     user: { type: UserType }
   }
 })
 
-const NewUserInput = new GraphQLInputObjectType({
-  name: 'NewUserInput',
+const CreateUserInput = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
   fields: {
     firstName: { type: GraphQLNonNull(GraphQLString) },
     lastName: { type: GraphQLString },
@@ -31,16 +31,16 @@ const NewUserInput = new GraphQLInputObjectType({
   }
 })
 
-const newUser: GraphQLFieldConfig<undefined, Context> = {
-  type: NewUserPayload,
+const createUser: GraphQLFieldConfig<undefined, Context> = {
+  type: CreateUserResponseType,
   args: {
-    newUserInput: { type: NewUserInput }
+    createUserInput: { type: CreateUserInput }
   },
   resolve: async (_, args, context) => {
-    if (!context.currentUser) throw new NotAuthorizedError()
-
-    const { firstName, lastName, email, password } = (args as InputType).newUserInput
     return handleErrors(async () => {
+      if (!context.currentUser) throw new NotAuthorizedError()
+
+      const { firstName, lastName, email, password } = (args as InputType).createUserInput
       const user = await UserService.createUser({ firstName, lastName, email, password })
 
       return { user }
@@ -48,4 +48,4 @@ const newUser: GraphQLFieldConfig<undefined, Context> = {
   }
 }
 
-export default newUser
+export default createUser

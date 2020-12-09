@@ -4,17 +4,17 @@ import handleErrors from '@/api/utils/handle-errors'
 import type { Context } from '@/api/types'
 import AuthService from '@/services/auth'
 
-const LogoutPayload = new GraphQLObjectWithErrorType({
-  name: 'LogoutPayload'
+const LogoutResponseType = new GraphQLObjectWithErrorType({
+  name: 'LogoutResponseType'
 })
 
 const logout: GraphQLFieldConfig<undefined, Context> = {
-  type: LogoutPayload,
+  type: LogoutResponseType,
   resolve: async (_, __, context) => {
-    const currentUserId = context.currentUser?.id
-    const authToken = context.authToken
-
     return handleErrors(async () => {
+      const { currentUser, authToken } = context
+      const currentUserId = currentUser?.id
+
       if (!authToken || !currentUserId) return
 
       await AuthService.logout({ id: currentUserId, token: authToken })
