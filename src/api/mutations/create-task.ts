@@ -7,7 +7,7 @@ import TasksService from '@/services/tasks'
 
 type InputType = {
   createTaskInput: {
-    parentId?: string
+    parentId?: string | null
     description: string
   }
 }

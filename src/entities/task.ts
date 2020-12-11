@@ -6,12 +6,15 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
+  BeforeUpdate,
+  BeforeInsert
 } from 'typeorm'
 import { IsDefined, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
 import { Board } from '@/entities/board'
 import { User } from '@/entities/user'
-import { Comment } from '@/entities//comment'
+import { Comment } from '@/entities/comment'
+import validateTaskInheritance from '@/validators/validate-task-inheritance'
 
 export enum TaskStatus {
   InProgress = 'IN_PROGRESS',
@@ -21,7 +24,7 @@ export enum TaskStatus {
 type ConstructorParams = {
   boardId?: string
   creatorId?: string
-  parentId?: string
+  parentId?: string | null
   description?: string
   status?: TaskStatus
 }
@@ -58,13 +61,13 @@ export class Task extends BaseEntity {
   creator!: User
 
   @Column({ type: 'uuid', nullable: true })
-  parentId?: string
+  parentId!: string | null
 
   @OneToMany(() => Task, task => task.parent)
   subtasks?: Task[]
 
   @ManyToOne(() => Task, task => task.subtasks)
-  parent?: Task
+  parent?: Task | null
 
   @OneToMany(() => Comment, comment => comment.task)
   comments?: Comment[]
@@ -84,4 +87,10 @@ export class Task extends BaseEntity {
 
   @UpdateDateColumn()
   readonly updatedAt!: Date
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async vaidateInheritance(): Promise<void> {
+    await validateTaskInheritance(this)
+  }
 }

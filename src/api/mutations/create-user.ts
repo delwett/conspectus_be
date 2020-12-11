@@ -7,7 +7,7 @@ import UserService from '@/services/users'
 type InputType = {
   createUserInput: {
     firstName: string
-    lastName?: string
+    lastName?: string | null
     email: string
     password: string
   }

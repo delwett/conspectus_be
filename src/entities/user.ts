@@ -5,7 +5,7 @@ import { Comment } from '@/entities/comment'
 
 type ConstructorParams = {
   firstName?: string
-  lastName?: string
+  lastName?: string | null
   email?: string
   password?: string
 }
@@ -18,7 +18,7 @@ export class User extends BaseEntity {
     const { firstName, lastName, email, password } = params
 
     if (firstName) this.firstName = firstName
-    if (lastName) this.lastName = lastName
+    if (lastName !== undefined) this.lastName = lastName
     if (email) this.email = email
     if (password) this.password = password
   }
@@ -31,10 +31,10 @@ export class User extends BaseEntity {
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
   firstName!: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
   @MaxLength(200, { message: 'First name is too long. Max $constraint1' })
-  lastName?: string
+  lastName!: string | null
 
   @Column({ unique: true })
   @IsNotEmpty({ message: 'Email should be defined' })

@@ -19,7 +19,7 @@ const commentsTable = new Table({
     },
     {
       name: 'text',
-      type: 'varchar'
+      type: 'text'
     },
     {
       name: 'created_at',
@@ -62,6 +62,6 @@ export class addComments1607455858617 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(commentsTable)
+    await queryRunner.dropTable(commentsTable)
   }
 }

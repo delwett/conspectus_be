@@ -24,21 +24,21 @@ export class createUsersAndBoards1607195261587 implements MigrationInterface {
           },
           {
             name: 'first_name',
-            type: 'varchar'
+            type: 'text'
           },
           {
             name: 'last_name',
-            type: 'varchar',
+            type: 'text',
             isNullable: true
           },
           {
             name: 'email',
-            type: 'varchar',
+            type: 'text',
             isUnique: true
           },
           {
             name: 'password',
-            type: 'varchar'
+            type: 'text'
           },
           {
             name: 'created_at',
@@ -76,7 +76,7 @@ export class createUsersAndBoards1607195261587 implements MigrationInterface {
           },
           {
             name: 'status',
-            type: 'varchar'
+            type: 'text'
           },
           {
             name: 'created_at',

@@ -7,7 +7,7 @@ import { User } from '@/entities/user'
 
 type CreateUserParams = {
   firstName: string
-  lastName?: string
+  lastName?: string | null
   email: string
   password: string
 }

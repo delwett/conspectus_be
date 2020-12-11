@@ -5,14 +5,14 @@ import ValidationError from '@/errors/validation-error'
 import { User } from '@/entities/user'
 import getUserById from './get-user-by-id'
 
-type CreateUserParams = {
+type UpdateUserParams = {
   id: string
   firstName: string
-  lastName?: string
+  lastName?: string | null
   email: string
 }
 
-export default async function createUser(params: CreateUserParams): Promise<User | undefined> {
+export default async function updateUser(params: UpdateUserParams): Promise<User | undefined> {
   const { id, firstName, lastName, email } = params
 
   const user = await getUserById(id)
@@ -20,7 +20,7 @@ export default async function createUser(params: CreateUserParams): Promise<User
   if (!user) return
 
   user.firstName = firstName
-  user.lastName = lastName
+  if (lastName !== undefined) user.lastName = lastName
   user.email = email
 
   const errors = await validate(user)

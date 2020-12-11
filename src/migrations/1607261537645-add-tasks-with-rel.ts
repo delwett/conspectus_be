@@ -18,12 +18,17 @@ const tasksTable = new Table({
       type: 'uuid'
     },
     {
+      name: 'parent_id',
+      type: 'uuid',
+      isNullable: true
+    },
+    {
       name: 'description',
-      type: 'varchar'
+      type: 'text'
     },
     {
       name: 'status',
-      type: 'varchar'
+      type: 'text'
     },
     {
       name: 'created_at',
@@ -48,6 +53,12 @@ const tasksTable = new Table({
       referencedColumnNames: ['id'],
       referencedTableName: 'users',
       onDelete: 'CASCADE'
+    },
+    {
+      columnNames: ['parent_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'tasks',
+      onDelete: 'CASCADE'
     }
   ],
   indices: [
@@ -56,6 +67,9 @@ const tasksTable = new Table({
     },
     {
       columnNames: ['creator_id']
+    },
+    {
+      columnNames: ['parent_id']
     }
   ]
 })
