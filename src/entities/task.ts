@@ -10,11 +10,13 @@ import {
   BeforeUpdate,
   BeforeInsert
 } from 'typeorm'
-import { IsDefined, IsEnum, IsNotEmpty, MaxLength } from 'class-validator'
+import { IsDefined, IsEnum, IsNotEmpty, MaxLength, validate } from 'class-validator'
 import { Board } from '@/entities/board'
 import { User } from '@/entities/user'
 import { Comment } from '@/entities/comment'
 import validateTaskInheritance from '@/validators/validate-task-inheritance'
+import getValidationErrorMessage from '@/utils/get-validation-error-message'
+import ValidationError from '@/errors/validation-error'
 
 export enum TaskStatus {
   InProgress = 'IN_PROGRESS',
@@ -87,6 +89,14 @@ export class Task extends BaseEntity {
 
   @UpdateDateColumn()
   readonly updatedAt!: Date
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validateEntity(): Promise<void> {
+    const errors = await validate(this)
+
+    if (errors.length > 0) throw new ValidationError(getValidationErrorMessage(errors))
+  }
 
   @BeforeInsert()
   @BeforeUpdate()

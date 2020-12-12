@@ -5,37 +5,32 @@ import NotAuthorizedError from '@/errors/not-authorized-error'
 import TasksService from '@/services/tasks'
 
 type InputType = {
-  updateTaskInput: {
+  updateTaskDescriptionInput: {
     id: string
-    parentId?: string | null
-    description?: string | null
+    description: string
   }
 }
 
-const UpdateTaskInput = new GraphQLInputObjectType({
-  name: 'UpdateTaskInput',
+const UpdateTaskDescriptionInput = new GraphQLInputObjectType({
+  name: 'UpdateTaskDescriptionInput',
   fields: {
     id: { type: GraphQLNonNull(GraphQLID) },
-    parentId: { type: GraphQLID },
-    description: { type: GraphQLString }
+    description: { type: GraphQLNonNull(GraphQLString) }
   }
 })
 
-const updateTask: GraphQLFieldConfig<undefined, Context> = {
+const updateTaskDescription: GraphQLFieldConfig<undefined, Context> = {
   type: TaskType,
   args: {
-    updateTaskInput: { type: UpdateTaskInput }
+    updateTaskDescriptionInput: { type: UpdateTaskDescriptionInput }
   },
   resolve: async (_, args, context) => {
     if (!context.currentUser) throw new NotAuthorizedError()
 
-    const { id, parentId, description } = (args as InputType).updateTaskInput
+    const { id, description } = (args as InputType).updateTaskDescriptionInput
 
-    return TasksService.updateTask(id, {
-      parentId,
-      description
-    })
+    return TasksService.updateTaskDescription({ id, description })
   }
 }
 
-export default updateTask
+export default updateTaskDescription
