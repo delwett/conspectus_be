@@ -2,7 +2,6 @@ import { GraphQLFieldConfig, GraphQLID, GraphQLInputObjectType, GraphQLNonNull, 
 import { CommentType } from '@/api/definitions'
 import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
-import TasksService from '@/services/tasks'
 import CommentsService from '@/services/comments'
 
 type InputType = {
@@ -29,8 +28,6 @@ const createComment: GraphQLFieldConfig<undefined, Context> = {
     if (!context.currentUser) throw new NotAuthorizedError()
 
     const { taskId, text } = (args as InputType).createCommentInput
-
-    await TasksService.getTaskById(taskId)
 
     return CommentsService.createComment({
       taskId,

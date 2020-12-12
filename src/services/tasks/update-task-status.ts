@@ -1,6 +1,8 @@
 import { getManager } from 'typeorm'
 import { Task, TaskStatus } from '@/entities/task'
-import NotFoundError from '@/errors/not-found-error'
+import ValidationError from '@/errors/validation-error'
+import BoardsService from '@/services/boards'
+import getTaskById from './get-task-by-id'
 
 type UpdateTaskStatusParams = {
   id: string
@@ -10,10 +12,10 @@ type UpdateTaskStatusParams = {
 export default async function updateTaskStatus(params: UpdateTaskStatusParams): Promise<Task[]> {
   const { id, status } = params
 
-  const manager = getManager()
-  const task = await manager.findOne(Task, { where: { id } })
+  const task = await getTaskById(id)
+  const currentBoard = await BoardsService.getCurrentBoard()
 
-  if (!task) throw new NotFoundError('Task is not found')
+  if (task.boardId !== currentBoard.id) throw new ValidationError('Actions with tasks in old boards are prohibited')
   if (status === task.status) return [task]
 
   if (status === TaskStatus.Completed) {
@@ -25,7 +27,7 @@ export default async function updateTaskStatus(params: UpdateTaskStatusParams): 
 
     return getManager().save([task, ...subtasks])
   } else {
-    const parent = await manager.findOne(Task, { where: { id: task.parentId, status: TaskStatus.Completed } })
+    const parent = await getManager().findOne(Task, { where: { id: task.parentId, status: TaskStatus.Completed } })
 
     // Update parent status too
     task.status = TaskStatus.InProgress

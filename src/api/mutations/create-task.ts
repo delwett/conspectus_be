@@ -2,7 +2,6 @@ import { GraphQLFieldConfig, GraphQLID, GraphQLInputObjectType, GraphQLNonNull, 
 import { TaskType } from '@/api/definitions'
 import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
-import BoardsService from '@/services/boards'
 import TasksService from '@/services/tasks'
 
 type InputType = {
@@ -30,10 +29,7 @@ const createTask: GraphQLFieldConfig<undefined, Context> = {
 
     const { description, parentId } = (args as InputType).createTaskInput
 
-    const currentBoard = await BoardsService.getCurrentBoard()
-
     return TasksService.createTask({
-      boardId: currentBoard.id,
       creatorId: context.currentUser.id,
       parentId,
       description

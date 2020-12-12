@@ -1,6 +1,8 @@
 import { getManager } from 'typeorm'
 import { Task } from '@/entities/task'
-import NotFoundError from '@/errors/not-found-error'
+import ValidationError from '@/errors/validation-error'
+import BoardsService from '@/services/boards'
+import getTaskById from './get-task-by-id'
 
 type UpdateTaskDescriptionParams = {
   id: string
@@ -10,12 +12,12 @@ type UpdateTaskDescriptionParams = {
 export default async function updateTaskDescription(params: UpdateTaskDescriptionParams): Promise<Task> {
   const { id, description } = params
 
-  const manager = getManager()
-  const task = await manager.findOne(Task, { where: { id } })
+  const task = await getTaskById(id)
+  const currentBoard = await BoardsService.getCurrentBoard()
 
-  if (!task) throw new NotFoundError('Task is not found')
+  if (task.boardId !== currentBoard.id) throw new ValidationError('Actions with tasks in old boards are prohibited')
 
   task.description = description
 
-  return manager.save(task)
+  return getManager().save(task)
 }
