@@ -8,6 +8,7 @@ import updateUser from './update-user'
 import updatePassword from './update-password'
 
 import createTask from './create-task'
+import deleteTask from './delete-task'
 import updateTaskStatus from './update-task-status'
 import updateTaskDescription from './update-task-description'
 import updateTaskParent from './update-task-parent'
@@ -23,6 +24,7 @@ export default new GraphQLObjectType({
     updateUser,
     updatePassword,
     createTask,
+    deleteTask,
     updateTaskStatus,
     updateTaskDescription,
     updateTaskParent,

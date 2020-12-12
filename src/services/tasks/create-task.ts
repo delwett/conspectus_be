@@ -13,7 +13,5 @@ export default async function createTask(params: CreateTaskParams): Promise<Task
 
   const task = new Task({ boardId, creatorId, parentId, description, status: TaskStatus.InProgress })
 
-  const savedTask = await getManager().save(task)
-
-  return savedTask
+  return getManager().save(task)
 }
