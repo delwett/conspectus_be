@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { getManager } from 'typeorm'
+import { getManager, QueryFailedError } from 'typeorm'
 import ValidationError from '@/errors/validation-error'
 import { User } from '@/entities/user'
 
@@ -19,5 +19,10 @@ export default async function createUser(params: CreateUserParams): Promise<User
 
   const user = new User({ firstName, lastName, email, password: passwordHash })
 
-  return getManager().save(user)
+  try {
+    return await getManager().save(user)
+  } catch (e: unknown) {
+    if (e instanceof QueryFailedError) throw new ValidationError('Selected email already present')
+    throw e
+  }
 }

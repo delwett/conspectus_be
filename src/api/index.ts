@@ -10,7 +10,9 @@ const graphqlMiddleware: RequestHandler = async (req, res) => {
   const authToken = typeof req.headers.auth === 'string' ? req.headers.auth : undefined
   const parsedToken = authToken ? await AuthService.decodeToken(authToken).catch(() => undefined) : undefined
 
-  const currentUser = parsedToken ? await UsersService.getUserById(parsedToken.id).catch(() => undefined) : undefined
+  const currentUser = parsedToken
+    ? await UsersService.getActiveUserById(parsedToken.id).catch(() => undefined)
+    : undefined
 
   const context: Context = {
     currentUser,

@@ -64,6 +64,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Comment, comment => comment.creator)
   comments?: Comment[]
 
+  @Column({ type: 'timestamp', nullable: true })
+  deletedAt!: Date | null
+
   @CreateDateColumn()
   readonly createdAt!: Date
 

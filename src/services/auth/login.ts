@@ -1,7 +1,6 @@
-import { getManager } from 'typeorm'
 import bcrypt from 'bcrypt'
 import { zadd } from '@/utils/redis'
-import { User } from '@/entities/user'
+import UsersService from '@/services/users'
 import NotFoundError from '@/errors/not-found-error'
 import encodeToken from './encode-token'
 import { TokenWhitelistPath, TokenLifetime } from './constants'
@@ -16,9 +15,10 @@ const NotFound = new NotFoundError('Incorrect email or password')
 export default async function login(parameters: LoginParameters): Promise<string | undefined> {
   const { email, password } = parameters
 
-  const user = await getManager().findOne(User, { where: { email } })
-
-  if (!user) throw NotFound
+  const user = await UsersService.getActiveUserByEmail(email).catch((e: unknown) => {
+    if (e instanceof NotFoundError) throw NotFound
+    throw e
+  })
 
   const valid = await bcrypt.compare(password, user.password)
 

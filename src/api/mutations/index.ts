@@ -4,6 +4,7 @@ import login from './login'
 import logout from './logout'
 
 import createUser from './create-user'
+import deleteUser from './delete-user'
 import updateUser from './update-user'
 import updatePassword from './update-password'
 
@@ -23,6 +24,7 @@ export default new GraphQLObjectType({
     login,
     logout,
     createUser,
+    deleteUser,
     updateUser,
     updatePassword,
     updateMeetingDate,

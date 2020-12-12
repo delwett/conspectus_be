@@ -13,6 +13,7 @@ export default async function decodeToken(authToken: string): Promise<TokenPaylo
 
   // TODO: separate functionality below
 
+  // Remove outdated tokens
   await zremrangebyscore(`${TokenWhitelistPath}:${result.id}`, '-inf', Date.now())
 
   const tokenWhitelist = await zrangebyscore(`${TokenWhitelistPath}:${result.id}`, '-inf', '+inf')

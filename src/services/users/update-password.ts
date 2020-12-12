@@ -2,7 +2,7 @@ import { getManager } from 'typeorm'
 import bcrypt from 'bcrypt'
 import NotFoundError from '@/errors/not-found-error'
 import ValidationError from '@/errors/validation-error'
-import getUserById from './get-user-by-id'
+import getActiveUserById from './get-active-user-by-id'
 
 type UpdatePasswordParams = {
   id: string
@@ -13,7 +13,7 @@ type UpdatePasswordParams = {
 export default async function updatePassword(params: UpdatePasswordParams): Promise<void> {
   const { id, oldPassword, newPassword } = params
 
-  const user = await getUserById(id)
+  const user = await getActiveUserById(id)
 
   const valid = await bcrypt.compare(oldPassword, user.password)
 
