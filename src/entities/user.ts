@@ -1,5 +1,17 @@
-import { Entity, BaseEntity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
-import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail } from 'class-validator'
+import {
+  Entity,
+  BaseEntity,
+  PrimaryColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate
+} from 'typeorm'
+import { IsDefined, IsNotEmpty, IsOptional, MaxLength, IsEmail, validate } from 'class-validator'
+import getValidationErrorMessage from '@/utils/get-validation-error-message'
+import ValidationError from '@/errors/validation-error'
 import { Task } from '@/entities/task'
 import { Comment } from '@/entities/comment'
 
@@ -57,4 +69,12 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   readonly updatedAt!: Date
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validateEntity(): Promise<void> {
+    const errors = await validate(this)
+
+    if (errors.length > 0) throw new ValidationError(getValidationErrorMessage(errors))
+  }
 }

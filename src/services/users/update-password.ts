@@ -15,8 +15,6 @@ export default async function updatePassword(params: UpdatePasswordParams): Prom
 
   const user = await getUserById(id)
 
-  if (!user) return
-
   const valid = await bcrypt.compare(oldPassword, user.password)
 
   if (!valid) throw new NotFoundError('Wrong old password')
