@@ -1,4 +1,5 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql'
+import { GraphQLDate } from 'graphql-iso-date'
 import { TaskType } from '@/api/definitions'
 import type { Context } from '@/api/types'
 import type { Board } from '@/entities/board'
@@ -8,7 +9,7 @@ const BoardType = new GraphQLObjectType<Board, Context>({
   name: 'Board',
   fields: {
     id: { type: GraphQLNonNull(GraphQLID) },
-    meetingDate: { type: GraphQLNonNull(GraphQLString) },
+    meetingDate: { type: GraphQLNonNull(GraphQLDate) },
     tasks: {
       type: new GraphQLList(TaskType),
       resolve: async board => TasksService.getRootTasks(board.id)
