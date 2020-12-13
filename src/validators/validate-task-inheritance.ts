@@ -3,7 +3,7 @@ import ValidationError from '@/errors/validation-error'
 import TasksService from '@/services/tasks'
 
 export default async function validateTaskInheritance(task: Task): Promise<void> {
-  if (task.id === task.parentId) throw new ValidationError('Task cannot reference itself')
+  if (task.parentId && task.id === task.parentId) throw new ValidationError('Task cannot reference itself')
 
   if (task.parentId) {
     const subtasks = await TasksService.getSubtasks([task.id])
