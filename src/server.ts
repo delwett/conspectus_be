@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 // Required for TypeORM
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
@@ -12,6 +13,8 @@ const IsDevelopment = Stage !== 'production'
 createConnection()
   .then(async () => {
     const app = express()
+
+    app.use(cors())
 
     app.use(jsonBodyParserMiddleware())
 
