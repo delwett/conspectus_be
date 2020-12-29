@@ -63,7 +63,7 @@ const TaskType = new GraphQLObjectType<Task, Context>({
         return commentsLoader.load(task.id)
       }
     },
-    status: { type: TaskStatusEnum }
+    status: { type: GraphQLNonNull(TaskStatusEnum) }
   })
 })
 

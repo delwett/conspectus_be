@@ -1,11 +1,11 @@
-import { GraphQLFieldConfig } from 'graphql'
+import { GraphQLFieldConfig, GraphQLNonNull } from 'graphql'
 import { BoardType } from '@/api/definitions'
 import type { Context } from '@/api/types'
 import NotAuthorizedError from '@/errors/not-authorized-error'
 import BoardsService from '@/services/boards'
 
 const getBoard: GraphQLFieldConfig<undefined, Context> = {
-  type: BoardType,
+  type: GraphQLNonNull(BoardType),
   resolve: async (_, __, context) => {
     if (!context.currentUser) throw new NotAuthorizedError()
 

@@ -11,7 +11,7 @@ const BoardType = new GraphQLObjectType<Board, Context>({
     id: { type: GraphQLNonNull(GraphQLID) },
     meetingDate: { type: GraphQLNonNull(GraphQLDate) },
     tasks: {
-      type: new GraphQLList(TaskType),
+      type: GraphQLNonNull(new GraphQLList(GraphQLNonNull(TaskType))),
       resolve: async board => TasksService.getRootTasks(board.id)
     }
   }
