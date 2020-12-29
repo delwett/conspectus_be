@@ -20,7 +20,7 @@ export default async function createTask(params: CreateTaskParams): Promise<Task
   if (parentId) {
     const parentTask = await getTaskById(parentId)
     if (parentTask.status === TaskStatus.Completed)
-      throw new ValidationError('Adding subtasks for complted task is prohibited')
+      throw new ValidationError('Adding subtasks for completed task is prohibited')
   }
 
   return getManager().save(task)

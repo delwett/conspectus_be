@@ -56,7 +56,7 @@ const TaskType = new GraphQLObjectType<Task, Context>({
       }
     },
     comments: {
-      type: new GraphQLList(CommentType),
+      type: GraphQLNonNull(new GraphQLList(GraphQLNonNull(CommentType))),
       resolve: async (task, _, context, info) => {
         const commentsLoader = getCommentsLoader(context.dataLoaders, info.fieldNodes)
 
