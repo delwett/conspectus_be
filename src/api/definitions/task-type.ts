@@ -48,7 +48,7 @@ const TaskType = new GraphQLObjectType<Task, Context>({
     id: { type: GraphQLNonNull(GraphQLID) },
     description: { type: GraphQLNonNull(GraphQLString) },
     subtasks: {
-      type: new GraphQLList(TaskType),
+      type: GraphQLNonNull(new GraphQLList(GraphQLNonNull(TaskType))),
       resolve: async (task, _, context, info) => {
         const subtasksLoader = getSubtasksLoader(context.dataLoaders, info.fieldNodes)
 
