@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonJS",
+    "target": "ESNext",
+    "module": "CommonJS",
     "strict": true,
     "noImplicitAny": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {
@@ -16,7 +16,7 @@
     },
     "typeRoots": ["node_modules/@types", "types"]
   },
-  "include": ["src/**/*", "ormconfig.ts"]
+  "include": ["src/**/*", "ormconfig.js"]
 }
 
   

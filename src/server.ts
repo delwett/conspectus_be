@@ -6,11 +6,11 @@ import { createConnection } from 'typeorm'
 import { json as jsonBodyParserMiddleware } from 'body-parser'
 import gqlPlayground from 'graphql-playground-middleware-express'
 import graphqlMiddleware from '@/api'
-import { Stage, Port, ApiPath, ApiPlaygroundPath, Host } from '@/config'
+import { Stage, Port, ApiPath, ApiPlaygroundPath, Connection } from '@/config'
 
 const IsDevelopment = Stage !== 'production'
 
-createConnection()
+createConnection(Connection)
   .then(async () => {
     const app = express()
 
@@ -22,8 +22,8 @@ createConnection()
 
     if (IsDevelopment) app.get(ApiPlaygroundPath, gqlPlayground({ endpoint: ApiPath }))
 
-    app.listen(Port, Host)
+    app.listen(Port)
 
-    console.log(`GraphQL server started at http://${Host}:${Port}${ApiPath}`)
+    console.log(`GraphQL server started`)
   })
   .catch(error => console.error('TypeORM connection error: ', error))
